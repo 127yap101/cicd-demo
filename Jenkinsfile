@@ -7,6 +7,9 @@ pipeline {
                 echo 'Checking Python version and PATH...'
                 bat 'python --version'
                 bat 'where python'
+
+                echo 'Checking Docker version...'
+                bat 'docker --version'
             }
         }
 
@@ -17,7 +20,7 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build Python Environment') {
             steps {
                 echo 'Setting up Python environment...'
                 bat 'python --version'
@@ -28,8 +31,18 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo 'Running tests...'
+                echo 'Running tests with pytest...'
                 bat 'python -m pytest test_app.py'
+            }
+        }
+
+        stage('Docker Build & Run') {
+            steps {
+                echo 'Building Docker image...'
+                bat 'docker build -t python-app:latest .'
+
+                echo 'Running Docker container...'
+                bat 'docker run --rm python-app:latest'
             }
         }
 
@@ -48,7 +61,6 @@ pipeline {
         }
         failure {
             echo '❌ Pipeline failed!'
+        }
     }
-  }
 }
-

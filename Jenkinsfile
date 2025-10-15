@@ -13,14 +13,14 @@ pipeline {
             steps {
                 echo 'Setting up Python environment...'
                 bat 'python --version'
-                bat 'pip install pytest >nul 2>&1 || echo pytest already installed'
+                bat 'pip install pytest'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                bat 'pytest test_app.py > result.log || type result.log'
+                bat 'pytest test_app.py'
             }
         }
 

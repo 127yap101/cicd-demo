@@ -2,6 +2,14 @@ pipeline {
     agent any
 
     stages {
+        stage('Debug Environment') {
+            steps {
+                echo 'Checking Python version and PATH...'
+                bat 'python --version'
+                bat 'where python'
+            }
+        }
+
         stage('Clone Repository') {
             steps {
                 echo 'Cloning the repository...'
@@ -13,14 +21,15 @@ pipeline {
             steps {
                 echo 'Setting up Python environment...'
                 bat 'python --version'
-                bat 'pip install pytest'
+                bat 'python -m pip install --upgrade pip'
+                bat 'python -m pip install pytest'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                bat 'pytest test_app.py'
+                bat 'python -m pytest test_app.py'
             }
         }
 
@@ -39,6 +48,7 @@ pipeline {
         }
         failure {
             echo '❌ Pipeline failed!'
-        }
     }
+  }
 }
+
